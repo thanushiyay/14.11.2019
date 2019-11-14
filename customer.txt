@@ -1,0 +1,70 @@
+var mongoose=require('mongoose')
+var express = require('express');
+var router = express.Router();
+var CustomerService = require('../services/service.customer');
+var  Customer=require('../models/model.customer');
+let counter = 0;
+
+router.post('/', async (req, res, next) =>
+{
+	const body = req.body;
+	try
+	{
+		console.log("hiiii");
+		Customer.findOne({ email: req.body.email }, function (err, user) {
+		// Make sure user doesn't already exist
+		if (user) 
+			return res.status(400)
+			  .send({ msg: 'The email address you have entered is already  another account.' });
+		});
+		 let customer=CustomerService.create(body);
+		  console.log(customer);
+		return res.status(200).json({Customer : customer});
+	}
+	catch(err)
+	{
+		if (err.name === 'ValidationError')
+		{
+        	return res.status(400).json({ error: err.message });
+		}
+
+		// unexpected error	
+		return next(err);
+	}
+});
+
+//get Method
+router.post('/check',async(req,res,next)=>
+{
+	 const body=req.body;
+	 try
+	 {
+		  Customer.findOne({email:body.email},function(err,user)
+		  {
+				if(!user)
+				{
+					 return res.status(400).send("Invalid User and Password");
+				}
+				else
+				{
+					
+					console.log("Successs");
+					console.log(user.firstName);
+					return res.status(200).json({Customer : customer});
+				}
+		  });
+	 }
+	 catch(err)
+	{
+		if (err.name === 'ValidationError')
+		{
+        	return res.status(400).json({ error: err.message });
+		}
+
+		// unexpected error	
+		return next(err);
+	}
+    
+});
+
+module.exports = router;

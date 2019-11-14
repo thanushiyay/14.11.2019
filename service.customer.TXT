@@ -1,0 +1,37 @@
+// const CustomerModel = require("../models/model.customer");
+// const Course=require('../models/model.customer');
+// let Validator = require('fastest-validator');
+let customers = {};
+let counter = 0;
+const Customer=require('../models/model.customer');
+const mongoose = require('mongoose');	
+const db=mongoose.connect('mongodb://localhost/SeeVoov');
+
+/* static customer service class */
+class CustomerService
+{
+	static create(data)
+	{
+			
+		console.log(data.firstName);
+		
+		// let  course1= Course.findOne({email:data.email});
+		// if ( course1 ) return 'user';
+		
+		const customer=new Customer({
+			firstName:data.firstName,
+			lastName:data.lastName,
+			email:data.email,
+			password:data.password
+		});
+
+		customer.save();	
+		return customer;
+	}
+
+	static retrieve(data)
+	{
+		 
+	}
+}
+module.exports = CustomerService;
